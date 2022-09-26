@@ -112,7 +112,7 @@ function SingleEventRight() {
                         <h4 className="_layout_middle_host_title _title5 _mar_b24">Host</h4>
                         <div className="_layout_middle_host_info">
                             <div className="_layout_middle_host_image">
-                                <img src="/img/friends_img.png" className="_host_img" />
+                                <img alt="" src="/img/friends_img.png" className="_host_img" />
                             </div>
                             <div className="_layout_middle_host_content">
                                 <h4 className="_layout_middle_host_txt">Metafan</h4>

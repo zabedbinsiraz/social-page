@@ -21,9 +21,9 @@ function SingleEvent() {
   function onOk(value) {
     console.log("onOk: ", value);
   }
-  function onChange(time, timeString) {
-    console.log(time, timeString);
-  }
+  // function onChange2(time, timeString) {
+  //   console.log(time, timeString);
+  // }
   return (
     <div className="_social_single_event_wrapper">
       <div className="_custom_row">

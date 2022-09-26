@@ -1,5 +1,5 @@
+import { Button } from 'antd';
 import React from 'react';
-import { Input, Dropdown, Menu, Button } from 'antd';
 
 function SingleEventLeft() {
     return(
@@ -7,7 +7,7 @@ function SingleEventLeft() {
             <div className="_social_event_card_inner">
                 <div className="_social_event_btn_link">
                     <div className="_social_event_image">
-                        <img src="../../img/social-event.png" alt="" className="_social_event_img" />
+                        <img src="../../img/social-event.png" alt="img" className="_social_event_img" />
                     </div>
                     <h4 className="_social_event_card_inner_title">Event Planning Courses Online Free</h4>
                 </div>
