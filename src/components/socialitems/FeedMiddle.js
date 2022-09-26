@@ -206,12 +206,24 @@ function FeedMiddle() {
   }, [postFourLastReaction]);
 
   const handleComment = (id) => {
-    const newComment = {
+
+    let newComment;
+    if (id === 1) {
+      newComment=post1cmnt;
+    } else if (id === 2) {
+      newComment=post2cmnt;
+    } else if (id === 3) {
+      newComment=post3cmnt;
+    } else if (id === 4) {
+      newComment=post4cmnt;
+    }
+
+    const commentNew = {
       postId: id,
       commentId: allComments.length + 1000,
-      comment: comment,
+      comment: newComment,
     };
-    dispatch(addComment(newComment));
+    dispatch(addComment(commentNew));
     setComment("");
   };
 
