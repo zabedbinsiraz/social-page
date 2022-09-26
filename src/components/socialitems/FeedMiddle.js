@@ -224,7 +224,10 @@ function FeedMiddle() {
       comment: newComment,
     };
     dispatch(addComment(commentNew));
-    setComment("");
+    setPost1cmnt('');
+    setPost2cmnt('');
+    setPost3cmnt('');
+    setPost4cmnt('');
   };
 
   const handleReaction = (id, reaction) => {
