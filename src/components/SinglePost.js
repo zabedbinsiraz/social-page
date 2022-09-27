@@ -432,9 +432,6 @@ export const SinglePost = ({postId,status}) => {
              
              
               <p className="_feed_post_description">
-                below post description
-              </p>
-              <p className="_feed_post_description">
                 {status}
               </p>
              
