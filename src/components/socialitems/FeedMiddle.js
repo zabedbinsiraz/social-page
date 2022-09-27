@@ -1,7 +1,5 @@
 import {
-  Button,
-  Checkbox,
-  Dropdown,
+  Button, Dropdown,
   Input,
   Menu,
   message,
@@ -17,8 +15,13 @@ import {
   updateComment
 } from "../../redux/CommentSlice";
 import { addReaction } from "../../redux/ReactionSlice";
+import { addReply } from "../../redux/ReplySlice";
+import { addStatus } from "../../redux/StatusSlice";
+import { SinglePost } from "../SinglePost";
 
 function FeedMiddle() {
+
+  const [status,setStatus] = useState();
 
   const [post1cmnt,setPost1cmnt] = useState();
   const [post2cmnt,setPost2cmnt] = useState();
@@ -26,6 +29,7 @@ function FeedMiddle() {
   const [post4cmnt,setPost4cmnt] = useState();
 
   const [isReply,setIsReply] = useState(false);
+  const [reply,setReply] = useState();
   const [comment, setComment] = useState();
   const [commentId, setCommentId] = useState();
   const [postId, setPostId] = useState();
@@ -53,12 +57,17 @@ function FeedMiddle() {
   const [love4, setLove4] = useState("d-none");
   const [wow4, setWow4] = useState("d-none");
   const [sad4, setSad4] = useState("d-none");
+
   //redux related code
   const dispatch = useDispatch();
 
   const allComments = useSelector((state) => state.commentsReducer.comments);
   const allReaction = useSelector((state) => state.reactionsReducer.reacts);
   const allReplies = useSelector((state)=>state.repliesReducer.replies);
+  const allStatus = useSelector((state)=>state.statusReducer.status);
+  console.log(allStatus);
+
+
 
   const postOneReaction = allReaction?.filter(
     (reaction) => reaction.postId === 1
@@ -618,9 +627,37 @@ function FeedMiddle() {
     </Menu>
   );
 
-const submitReply=()=>{
+const submitReply=(pId,cId)=>{
+  const newReply = {
+        postId:pId,
+        commentId:cId,
+        reply:reply,
+  }
+  dispatch(addReply(newReply));
   setIsReply(false)
+  setReply('');
 }
+
+
+const handleStatus = () =>{
+      const newStatus = {
+        statusId:100 + allStatus?.length,
+        status:status,
+      }
+
+      dispatch(addStatus(newStatus));
+      setIsModalVisible(false);
+
+
+}
+// const dltStatus=(id)=>{
+//     dispatch(deleteStatus(id));
+// }
+
+
+
+
+
   return (
     <div className="_custom_col_xl_6 _custom_col_lg_6 _custom_col_md_12 _custom_col_sm_12">
       <div className="_layout_middle_wrap">
@@ -716,6 +753,8 @@ const submitReply=()=>{
                       placeholder="What's on your mind, Martin?"
                       className="_statusBox_textarea_text _statusBox_textarea2"
                       defaultValue={""}
+                      value={status}
+                      onChange={(e)=>setStatus(e.target.value)}
                     />
                   </div>
                   <div className="_statusBox_options">
@@ -1047,7 +1086,7 @@ const submitReply=()=>{
                             />
                           </svg>
                         </span>
-                        <div className="_grp_pull_drpdwn1">
+                        {/* <div className="_grp_pull_drpdwn1">
                           <Checkbox.Group onChange={onChange}>
                             <ul className="_grp_pull_drpdwn1_ul">
                               <li>
@@ -1062,14 +1101,16 @@ const submitReply=()=>{
                               </li>
                             </ul>
                           </Checkbox.Group>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
                   {/* poll */}
 
                   <div className="_statusBox_main_bottom">
-                    <Button className="_statusBox_main_bottom_link">
+                    <Button className="_statusBox_main_bottom_link"
+                    onClick={()=>handleStatus()}
+                    >
                       Post
                     </Button>
                   </div>
@@ -1165,6 +1206,10 @@ const submitReply=()=>{
               </div>
             </div>
           </div>
+
+          {/* dynamic post here */}
+          {allStatus && allStatus.map((post)=><SinglePost postId={post.statusId} status={post.status} />)}
+          {/* dynamic post ends here */}
 
           {/* first post */}
           <div className="_feed_inner_timeline_post_area  _feed_middle_inner">
@@ -2656,7 +2701,7 @@ const submitReply=()=>{
 
 
                         {/* reply starts here */}
-                        <div className="_M_social_comment_reply">
+                        {/* <div className="_M_social_comment_reply">
                       <div className="_M_comment_reply">
                         <div className="_M_social_comment_reply_main">
                           <div className="_M_comment_pic">
@@ -2668,7 +2713,7 @@ const submitReply=()=>{
                               />
                             </Link>
                           </div>
-                          {/* <div className="_comment_details_area">
+                          <div className="_comment_details_area">
                             <div className="_comment_details">
                               <div className="_comment_details_top _dis_flex _dis_flex_cntr1">
                                 <div className="_comment_info">
@@ -2857,12 +2902,16 @@ const submitReply=()=>{
                                 </li>
                               </ul>
                             </div>
-                          </div> */}
+                          </div>
                         </div>
                       </div>
 
                     
-                      {
+                      
+                      
+                    </div> */}
+
+                    {
                         isReply && <div className="_feed_inner_comment_box">
                         <form className="_feed_inner_comment_box_form">
                           <div className="_feed_inner_comment_box_content">
@@ -2877,8 +2926,9 @@ const submitReply=()=>{
                               <TextArea
                                 className="_comment_textarea"
                                 rows={2}
-                                placeholder="Write Someting..."
-                                onChange={onChange2}
+                                value={reply}
+                                placeholder="Write reply..."
+                                onChange={(e)=>setReply(e.target.value)}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
                               />
                             </div>
@@ -2920,11 +2970,10 @@ const submitReply=()=>{
                             </button>
                           </div>
                         </form>
-                        <button onClick={()=>submitReply()}>Submit reply</button>
+                        <button style={{marginLeft:'200px',borderRadius:'30px',padding:'5px'}} onClick={()=>submitReply(comment.postId,comment.commentId)}>Submit reply</button>
                       </div>
                       }
-                      
-                    </div>
+
                   {/* reply ends here */}
 
                       </div>

@@ -13,6 +13,7 @@ export const commentSlice = createSlice({
     reducers:{
         showComments:(state)=>state,
         addComment:(state,action)=>{
+            console.log(action.payload)
             state.comments.push(action.payload);
         },
         deleteComment:(state,action)=>{

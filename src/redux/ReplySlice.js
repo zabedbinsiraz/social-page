@@ -1,10 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialReplies = {
-    replies:[
-        {postId:1,commentId:1,replyId:1,reply:'Beautiful'},
-        {postId:2,commentId:2,replyId:2,reply:'Excellent'},
-    ]
+    replies:[]
 };
 
 export const replySlice = createSlice({
