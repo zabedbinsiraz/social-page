@@ -46,6 +46,8 @@ export const SinglePost = ({postId,status}) => {
         dispatch(addReaction(newReaction));
       };
 
+      const [upCmnt,setUpCmnt] = useState();
+
  useEffect(() => {
     if (postLastReaction === "like") {
       setLike("");
@@ -338,7 +340,7 @@ export const SinglePost = ({postId,status}) => {
       const handleDeleteUpdate = ( cId, cmnt) => {
         
         setCommentId(cId);
-        setComment(cmnt);
+        setUpCmnt(cmnt);
       };
     
       const handleCommentDelete = (id) => {
@@ -354,9 +356,9 @@ export const SinglePost = ({postId,status}) => {
         const updtCmnt = {
           postId: postId,
           commentId: commentId,
-          comment: comment,
+          comment: upCmnt,
         };
-        console.log(updtCmnt);
+        
     
         dispatch(updateComment(updtCmnt));
         setIsEditable(false);
@@ -715,8 +717,8 @@ export const SinglePost = ({postId,status}) => {
                   className="_comment_textarea"
                   rows={2}
                   placeholder="Write Someting..."
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
+                  value={upCmnt}
+                  onChange={(e) => setUpCmnt(e.target.value)}
                   autoSize={{ minRows: 1, maxRows: 10 }}
                 />
               </div>
