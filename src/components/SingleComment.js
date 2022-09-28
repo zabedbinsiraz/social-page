@@ -1,13 +1,57 @@
 
 import {
-    Button, Dropdown, Menu
+  Button, Dropdown, Menu
 } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { addCommentReaction } from "../redux/CommentReactionSlice";
 
-const SingleComment = ({comment, deleteComment , edit, update}) => {
-   
+const SingleComment = ({postId,commentId, comment, deleteComment , edit, update}) => {
+  const [like, setLike] = useState("");
+  const [love, setLove] = useState("d-none");
+  const [wow, setWow] = useState("d-none");
+  const [sad, setSad] = useState("d-none");
 
+  const dispatch = useDispatch();
+
+  const allReaction = useSelector((state) => state.commentReactionsReducer.reacts);
+
+    const commentReaction = allReaction?.filter(
+        (reaction) => reaction.postId === postId && reaction.commentId===commentId
+      );
+      const commentReactionLength = commentReaction[0]?.reacts?.length;
+      const commentLastReaction =
+        commentReaction[0]?.reacts[commentReactionLength - 1];
+
+  const handleReaction = (reaction) => {
+    const newReaction = { postId: postId ,commentId:commentId,reaction: reaction };
+    dispatch(addCommentReaction(newReaction));
+  };
+
+  useEffect(() => {
+    if (commentLastReaction === "like") {
+      setLike("");
+      setLove("d-none");
+      setSad("d-none");
+      setWow("d-none");
+    } else if (commentLastReaction === "love") {
+      setLike("d-none");
+      setLove("");
+      setSad("d-none");
+      setWow("d-none");
+    } else if (commentLastReaction === "wow") {
+      setLike("d-none");
+      setLove("d-none");
+      setSad("d-none");
+      setWow("");
+    } else if (commentLastReaction === "sad") {
+      setLike("d-none");
+      setLove("d-none");
+      setSad("");
+      setWow("d-none");
+    }
+  }, [commentLastReaction]);
 
     const menu2 = (
         <Menu className="_courseporium_social_more_drop2 _drpdwn1">
@@ -172,22 +216,22 @@ const SingleComment = ({comment, deleteComment , edit, update}) => {
                           <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
                         </svg>
                         <div className="_inline_post_emoji  _no_anim">
-                          <div className="_emoji _emoji_love ">
+                          <div className={`_emoji _emoji_love ${love}`}>
                             <div class="_emoji_heart"></div>
                           </div>
-                          <div className="_emoji _emoji_like d-none">
+                          <div className={`_emoji _emoji_like ${like}`}>
                             <div class="_emoji_hand">
                               <div class="_emoji_thumb"></div>
                             </div>
                           </div>
-                          <div className="_emoji _emoji_wow d-none">
+                          <div className={`_emoji _emoji_wow ${wow}`}>
                             <div class="_emoji_face">
                               <div class="_emoji_eyebrows"></div>
                               <div class="_emoji_eyes"></div>
                               <div class="_emoji_mouth"></div>
                             </div>
                           </div>
-                          <div className="_emoji _emoji_sad d-none">
+                          <div className={`_emoji _emoji_sad ${sad}`}>
                             <div className="_emoji_face">
                               <div className="_emoji_eyebrows"></div>
                               <div className="_emoji_eyes"></div>
@@ -196,24 +240,24 @@ const SingleComment = ({comment, deleteComment , edit, update}) => {
                           </div>
                         </div>
                         <p className="_feed_inner_timeline_reaction_para">
-                          <span>12</span> Like
+                        <span>{commentReactionLength}</span> {commentLastReaction}
                         </p>
                       </div>
                     </span>
                     <ul className="_reactions_box">
-                      <li className="_reaction _reaction_1">
+                      <li className="_reaction _reaction_1" onClick={() => handleReaction("like")}>
                         <div className="_emoji _emoji_like">
                           <div className="_emoji_hand">
                             <div className="_emoji_thumb" />
                           </div>
                         </div>
                       </li>
-                      <li className="_reaction _reaction_2">
+                      <li className="_reaction _reaction_2" onClick={() => handleReaction("love")}>
                         <div className="_emoji _emoji_love">
                           <div className="_emoji_heart" />
                         </div>
                       </li>
-                      <li className="_reaction _reaction_3">
+                      <li className="_reaction _reaction_3" onClick={() => handleReaction("wow")}>
                         <div className="_emoji _emoji_wow">
                           <div className="_emoji_face">
                             <div className="_emoji_eyebrows" />
@@ -222,7 +266,7 @@ const SingleComment = ({comment, deleteComment , edit, update}) => {
                           </div>
                         </div>
                       </li>
-                      <li className="_reaction _reaction_4">
+                      <li className="_reaction _reaction_4" onClick={() => handleReaction("sad")}>
                         <div className="_emoji _emoji_sad">
                           <div className="_emoji_face">
                             <div className="_emoji_eyebrows" />

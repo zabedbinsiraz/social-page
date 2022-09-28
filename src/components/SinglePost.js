@@ -1,7 +1,7 @@
 
 import {
-    Button, Dropdown,
-    Menu
+  Button, Dropdown,
+  Menu
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ import { addComment, deleteComment, updateComment } from "../redux/CommentSlice"
 import { addReaction } from "../redux/ReactionSlice";
 import SingleComment from './SingleComment';
 
-export const SinglePost = ({postId,status}) => {
+export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
     const [commentId,setCommentId] = useState();
     const [comment,setComment] = useState();
     const [isEditable, setIsEditable] = useState(false);
@@ -216,7 +216,7 @@ export const SinglePost = ({postId,status}) => {
             </button>
           </Menu.Item>
           <Menu.Item className="_drpdwn1_li">
-            <button type="submit" className="_courseporium_social_more_drop_link">
+            <button className="_courseporium_social_more_drop_link" onClick={()=>editPost(postId,status)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={14}
@@ -243,7 +243,7 @@ export const SinglePost = ({postId,status}) => {
             </button>
           </Menu.Item>
           <Menu.Item className="_drpdwn1_li">
-            <button type="submit" className="_courseporium_social_more_drop_link">
+            <button onClick={()=>dlteStatus(postId)} className="_courseporium_social_more_drop_link">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="14"
@@ -412,7 +412,8 @@ export const SinglePost = ({postId,status}) => {
                       placement="bottomLeft"
                       arrow
                     >
-                      <Button className="_feed_timeline_post_dropdown_link">
+                      <Button className="_feed_timeline_post_dropdown_link"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="4"
@@ -695,7 +696,7 @@ export const SinglePost = ({postId,status}) => {
       </button>
     </div> */}
     {comments.length>0 &&  
-      comments.map((comment) =><SingleComment deleteComment={handleCommentDelete} edit={makeEditable} update={handleDeleteUpdate} comment={comment}/>)}
+      comments.slice(0).reverse().map((comment) =><SingleComment deleteComment={handleCommentDelete} edit={makeEditable} update={handleDeleteUpdate} comment={comment} postId={postId} commentId={comment.commentId} />)}
 
     {isEditable && (
       <div className="_feed_inner_timeline_comment_area">

@@ -16,7 +16,7 @@ import {
 } from "../../redux/CommentSlice";
 import { addReaction } from "../../redux/ReactionSlice";
 import { addReply } from "../../redux/ReplySlice";
-import { addStatus } from "../../redux/StatusSlice";
+import { addStatus, deleteStatus, updateStatus } from "../../redux/StatusSlice";
 import { SinglePost } from "../SinglePost";
 
 function FeedMiddle() {
@@ -294,8 +294,9 @@ function FeedMiddle() {
     action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
     name: "file",
   };
- 
- 
+  const [editableId,setEditableId] = useState();
+  const [isEditPost,setIsEditPost]=useState(false);
+  const [editableTxt,setEditableTxt] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const showModal = () => {
     setIsModalVisible(true);
@@ -647,12 +648,38 @@ const handleStatus = () =>{
 
       dispatch(addStatus(newStatus));
       setIsModalVisible(false);
+      setStatus('');
 
 
 }
-// const dltStatus=(id)=>{
-//     dispatch(deleteStatus(id));
+const dltStatus=(id)=>{
+    dispatch(deleteStatus(id));
+    setStatus('')
+}
+
+// const makeEditablePost = () => {
+//       setIsEditPost(true);
 // }
+
+const editPostHandler = () =>{
+      const updateablePost = {
+        statusId:editableId,
+        status:editableTxt,
+      }
+
+      dispatch(updateStatus(updateablePost));
+      setIsEditPost(false);
+      setEditableTxt('');
+      console.log(updateStatus);
+    
+}
+console.log(allStatus);
+
+const editPost = (id,status) => {
+    setIsEditPost(true);
+    setEditableTxt(status);
+    setEditableId(id)
+}
 
 
 
@@ -670,14 +697,26 @@ const handleStatus = () =>{
                 <img src="../../img/man1.png" alt="" className="_feed_img" />
               </div>
               <div className="_feed_inner_txt_box_textarea">
-                <TextArea
-                  onClick={showModal}
+                
+                {/* {
+                  isEditPost ? <div><TextArea
+                  
                   className="_feed_textarea"
                   rows={2}
                   placeholder="Write Someting..."
-                  onChange={onChange}
+                  value={editableTxt}
+                  onChange={(e)=>setEditableTxt(e.target.value)}
                   autoSize={{ minRows: 1, maxRows: 10 }}
-                />
+                /> <Button  onClick={()=>editPostHandler()}>update post</Button></div> : <TextArea */}
+               <TextArea onClick={showModal}
+                className="_feed_textarea"
+                rows={2}
+                placeholder="Write Someting..."
+                onChange={onChange}
+                autoSize={{ minRows: 1, maxRows: 10 }}
+              />
+                {/* } */}
+
                 <Modal
                   className="_feed_inner_text_area_modal"
                   centered
@@ -1207,8 +1246,101 @@ const handleStatus = () =>{
             </div>
           </div>
 
+          {/* modal starts for edit  post */}
+
+          <Modal
+                  className="_feed_inner_text_area_modal"
+                  centered
+                  visible={isEditPost}
+                  onOk={handleOk}
+                  onCancel={handleCancel}
+                >
+                  <div className="_feed_status_box_main_top_title">
+                    <span className="_feed_status_box_main_top_arrow _dis_flex_all">
+                      <svg
+                        width="18"
+                        height="24"
+                        viewBox="0 0 48 48"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M17.6945 36.6945C16.6206 37.7685 14.8794 37.7685 13.8055 36.6945L2.80546 25.6945C1.73151 24.6206 1.73151 22.8794 2.80546 21.8055L13.8055 10.8055C14.8794 9.73151 16.6206 9.73151 17.6945 10.8055C18.7685 11.8794 18.7685 13.6206 17.6945 14.6945L11.3891 21L43.25 21C44.7688 21 46 22.2312 46 23.75C46 25.2688 44.7688 26.5 43.25 26.5L11.3891 26.5L17.6945 32.8055C18.7685 33.8794 18.7685 35.6206 17.6945 36.6945Z"
+                          fill="#111827"
+                        />
+                      </svg>
+                    </span>
+                    <h3 className="_titl3">Update your post</h3>
+                  </div>
+                  <div className="_feed_status_box_main_top">
+                    <div className="_feed_statusBox_main_pic">
+                      <a href="#0">
+                        <img
+                          src="https://ewr1.vultrobjects.com/carevan-course/ckysk9xi8000r4ph2anlg1obu.jpg"
+                          alt=""
+                          className="_statusBox_main_img _1border_color"
+                        />
+                      </a>
+                    </div>
+                    <div className="_statusBox_main_details">
+                      <a href="#0">
+                        <p className="_statusBox_main_name">Martin Vaccaro</p>
+                      </a>
+                      <div className="_statusBox_main_drop">
+                        <Dropdown
+                          trigger={["click"]}
+                          overlay={menu3}
+                          placement="bottomLeft"
+                          arrow
+                        >
+                          <Button className="_feed_privacy_btn_link">
+                            Public
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width={14}
+                              height={14}
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="feather feather-chevron-down"
+                            >
+                              <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                          </Button>
+                        </Dropdown>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="_statusBox_textarea">
+                    <textarea
+                      id="status_box"
+                      type="text"
+                      placeholder="What's on your mind, Martin?"
+                      className="_statusBox_textarea_text _statusBox_textarea2"
+                      defaultValue={""}
+                      value={editableTxt}
+                      onChange={(e)=>setEditableTxt(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="_statusBox_main_bottom">
+                    <Button className="_statusBox_main_bottom_link"
+                    onClick={()=>editPostHandler()}
+                    >
+                      Post
+                    </Button>
+                  </div>
+                </Modal>
+
+          {/* modal starts for edit  post */}
+
           {/* dynamic post here */}
-          {allStatus && allStatus.map((post)=><SinglePost postId={post.statusId} status={post.status} />)}
+          {allStatus && allStatus.slice(0).reverse().map((post)=><SinglePost postId={post.statusId} status={post.status} dlteStatus={dltStatus} editPost={editPost} />)}
           {/* dynamic post ends here */}
 
           {/* first post */}
