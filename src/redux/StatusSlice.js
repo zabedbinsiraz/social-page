@@ -17,7 +17,7 @@ export const statusSlice = createSlice({
       state.status = state.status.filter((s) => s.statusId !== id);
     },
     updateStatus: (state, action) => {
-      const { statusId, status } = action.payload;
+      const { statusId, status} = action.payload;
       const isStatusExist = state.status.filter((s) => s.statusId === statusId);
       if (isStatusExist) {
         isStatusExist[0].status = status;

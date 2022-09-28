@@ -1,13 +1,61 @@
 
 import { Button, Dropdown, Menu } from "antd";
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { addReplyReaction } from "../redux/ReplyReactionSlice";
 import { deleteReply } from "../redux/ReplySlice";
 
 
-const SingleReply = ({replyId,reply}) => {
+const SingleReply = ({postId,commentId,replyId,reply,createdAt}) => {
 
-    const dispatch = useDispatch();
+
+  const [like, setLike] = useState("");
+  const [love, setLove] = useState("d-none");
+  const [wow, setWow] = useState("d-none");
+  const [sad, setSad] = useState("d-none");
+
+  const dispatch = useDispatch();
+
+  const allReaction = useSelector((state) => state.replyReactionsReducer.reacts);
+
+    const replyReaction = allReaction?.filter(
+        (reaction) => reaction.postId === postId && reaction.commentId===commentId && reaction.replyId===replyId
+      );
+      const replyReactionLength = replyReaction[0]?.reacts?.length;
+      const replyLastReaction =
+        replyReaction[0]?.reacts[replyReactionLength - 1];
+
+  const handleReaction = (reaction) => {
+    const newReaction = { postId: postId ,commentId:commentId,replyId:replyId ,reaction: reaction };
+    dispatch(addReplyReaction(newReaction));
+  };
+
+  useEffect(() => {
+    if (replyLastReaction === "like") {
+      setLike("");
+      setLove("d-none");
+      setSad("d-none");
+      setWow("d-none");
+    } else if (replyLastReaction === "love") {
+      setLike("d-none");
+      setLove("");
+      setSad("d-none");
+      setWow("d-none");
+    } else if (replyLastReaction === "wow") {
+      setLike("d-none");
+      setLove("d-none");
+      setSad("d-none");
+      setWow("");
+    } else if (replyLastReaction === "sad") {
+      setLike("d-none");
+      setLove("d-none");
+      setSad("");
+      setWow("d-none");
+    }
+  }, [replyLastReaction]);
+
+    
 
 
 
@@ -70,7 +118,7 @@ const deleteTheReply = (id) =>{
           </Menu.Item>
         </Menu>
       );
-
+      const postTime =Math.round((new Date() - createdAt)/1000);
 
   return (
     <div className="_M_social_comment_reply">
@@ -92,7 +140,9 @@ const deleteTheReply = (id) =>{
                           Radovan SkillArena
                         </h4>
                       </Link>
-                      <p className="_comment_name_info_para">3 min ago</p>
+                      <p className="_comment_name_info_para">{
+                          postTime >1 ? postTime<59? <p>{postTime} seconds ago</p>:<p>{Math.round(postTime/60)} minutes ago</p> :'just now'
+                        }</p>
                     
                     </div>
                     <p className="_comment_name_para">Software Developer</p>
@@ -152,22 +202,22 @@ const deleteTheReply = (id) =>{
                           <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
                         </svg>
                         <div className="_inline_post_emoji  _no_anim">
-                          <div className="_emoji _emoji_love ">
+                          <div className={`_emoji _emoji_love ${love}`}>
                             <div class="_emoji_heart"></div>
                           </div>
-                          <div className="_emoji _emoji_like d-none">
+                          <div className={`_emoji _emoji_like ${like}`}>
                             <div class="_emoji_hand">
                               <div class="_emoji_thumb"></div>
                             </div>
                           </div>
-                          <div className="_emoji _emoji_wow d-none">
+                          <div className={`_emoji _emoji_wow ${wow}`}>
                             <div class="_emoji_face">
                               <div class="_emoji_eyebrows"></div>
                               <div class="_emoji_eyes"></div>
                               <div class="_emoji_mouth"></div>
                             </div>
                           </div>
-                          <div className="_emoji _emoji_sad d-none">
+                          <div className={`_emoji _emoji_sad ${sad}`}>
                             <div className="_emoji_face">
                               <div className="_emoji_eyebrows"></div>
                               <div className="_emoji_eyes"></div>
@@ -176,24 +226,25 @@ const deleteTheReply = (id) =>{
                           </div>
                         </div>
                         <p className="_feed_inner_timeline_reaction_para">
-                          <span>12</span> Like
+                        <span>{replyReactionLength}</span> {replyLastReaction}
                         </p>
                       </div>
                     </span>
                     <ul className="_reactions_box">
-                      <li className="_reaction _reaction_1">
+                      <li className="_reaction _reaction_1"
+                      onClick={()=>handleReaction("like")}>
                         <div className="_emoji _emoji_like">
                           <div className="_emoji_hand">
                             <div className="_emoji_thumb" />
                           </div>
                         </div>
                       </li>
-                      <li className="_reaction _reaction_2">
+                      <li className="_reaction _reaction_2"onClick={()=>handleReaction("love")}>
                         <div className="_emoji _emoji_love">
                           <div className="_emoji_heart" />
                         </div>
                       </li>
-                      <li className="_reaction _reaction_3">
+                      <li className="_reaction _reaction_3"onClick={()=>handleReaction("wow")}>
                         <div className="_emoji _emoji_wow">
                           <div className="_emoji_face">
                             <div className="_emoji_eyebrows" />
@@ -202,7 +253,7 @@ const deleteTheReply = (id) =>{
                           </div>
                         </div>
                       </li>
-                      <li className="_reaction _reaction_4">
+                      <li className="_reaction _reaction_4"onClick={()=>handleReaction("sad")}>
                         <div className="_emoji _emoji_sad">
                           <div className="_emoji_face">
                             <div className="_emoji_eyebrows" />
@@ -214,7 +265,8 @@ const deleteTheReply = (id) =>{
                     </ul>
                   </button>
                 </li>
-                <li className="_feed_comment_reaction_item">
+
+                {/* <li className="_feed_comment_reaction_item">
                   <button className="_feed_comment_reaction_link">
                     <span className="_like_btn _like_btn-post unselectable">
                       <div className="_status_reaction _active_like">
@@ -242,7 +294,8 @@ const deleteTheReply = (id) =>{
                       </div>
                     </span>
                   </button>
-                </li>
+                </li> */}
+
               </ul>
             </div>
           </div>

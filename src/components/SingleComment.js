@@ -120,18 +120,22 @@ const SingleComment = ({postId,commentId, comment, deleteComment , edit, update}
         setIsReply(true);
       }
 
-      const submitReplyHandler = () => {
+      const submitReplyHandler = (e) => {
+        e.preventDefault();
         const newReply = {
           postId:postId,
           commentId:commentId,
           replyId:allReplies?.length + 1000,
           reply:replyTxt,
+          createdAt:new Date(),
         }
         dispatch(addReply(newReply));
         setIsReply(false);
         setReplyTxt('');
 
       }
+
+      const postTime =Math.round((new Date() - comment.createdAt)/1000);
 
   return (
     <div className="_comment_main">
@@ -157,7 +161,9 @@ const SingleComment = ({postId,commentId, comment, deleteComment , edit, update}
                         </h4>
                       </Link>
                       <p className="_comment_name_info_para">
-                        5 min ago
+                      {
+                          postTime >1 ? postTime<59? <p>{postTime} seconds ago</p>:<p>{Math.round(postTime/60)} minutes ago</p> :'just now'
+                        }
                       </p>
                     </div>
                     <p className="_comment_name_para">
@@ -328,7 +334,8 @@ const SingleComment = ({postId,commentId, comment, deleteComment , edit, update}
                           />
                         </svg>
                         <p className="_feed_inner_timeline_reaction_para">
-                          <span>1</span> Reply
+                          
+                          <span>{replies?.length || 0}</span> {replies?.length >1 ? 'replies':'reply'}
                         </p>
                       </div>
                     </span>
@@ -338,13 +345,13 @@ const SingleComment = ({postId,commentId, comment, deleteComment , edit, update}
             </div>
 
             {
-              replies.length>0 && replies.slice(0).reverse().map((reply)=><SingleReply replyId={reply.replyId} reply={reply.reply} />)
+              replies.length>0 && replies.slice(0).reverse().map((reply)=><SingleReply postId={postId} commentId={commentId} replyId={reply.replyId} reply={reply.reply} createdAt={reply.createdAt} />)
             }
 
   
            {
-            isReply && <div className="_feed_inner_comment_box">
-            <form className="_feed_inner_comment_box_form">
+            isReply && <div style={{marginBottom:'10px'}} className="_feed_inner_comment_box">
+            <form className="_feed_inner_comment_box_form" onSubmit={submitReplyHandler}>
               <div className="_feed_inner_comment_box_content">
                 <div className="_feed_inner_comment_box_content_image">
                   <img
@@ -403,13 +410,14 @@ const SingleComment = ({postId,commentId, comment, deleteComment , edit, update}
                   </svg>
                 </button>
               </div>
-            </form>
-            <button
-          style={{ color: "blue", marginLeft: "200px",padding:'5px',borderRadius:'50px' }}
-          onClick={() => submitReplyHandler()}
+              <button type="submit"
+          style={{ color: "blue",padding:'5px',borderRadius:'50px' }}
+          
         >
           Submit
         </button>
+            </form>
+            
           </div>
            }
 

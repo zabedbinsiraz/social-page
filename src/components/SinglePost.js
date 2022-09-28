@@ -11,7 +11,7 @@ import { addComment, deleteComment, updateComment } from "../redux/CommentSlice"
 import { addReaction } from "../redux/ReactionSlice";
 import SingleComment from './SingleComment';
 
-export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
+export const SinglePost = ({postId,status, dlteStatus,editPost,createdAt}) => {
     const [commentId,setCommentId] = useState();
     const [comment,setComment] = useState();
     const [isEditable, setIsEditable] = useState(false);
@@ -320,12 +320,14 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
     //   );
 
 
-    const handleComment = () => {
+    const handleComment = (e) => {
+      e.preventDefault();
     
         const commentNew = {
           postId: postId,
           commentId: allComments?.length + 1000,
           comment: comment,
+          createdAt:new Date(),
         };
         console.log(commentNew);
         console.log(allComments)
@@ -352,7 +354,8 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
         setIsEditable(true);
       };
     
-      const handleCommentEdit = () => {
+      const handleCommentEdit = (e) => {
+        e.preventDefault();
         const updtCmnt = {
           postId: postId,
           commentId: commentId,
@@ -365,8 +368,7 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
         setComment("");
       };
 
-
-
+      const postTime =Math.round((new Date() - createdAt)/1000);
 
 
   return (
@@ -387,7 +389,9 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
                     </a>
                     <div className="_feed_inner_timline_area">
                       <p className="_feed_inner_timeline_post_box_para">
-                        5 minute ago .
+                      {
+                          postTime >1 ? postTime<59? <p>{postTime} seconds ago</p>:<p>{Math.round(postTime/60)} minutes ago</p> :'just now'
+                        }
                       </p>
                       <div className="_feed_privacy">
                         <Dropdown
@@ -560,7 +564,8 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
                             />
                           </svg>
                           <p className="_feed_inner_timeline_reaction_para">
-                            <span>{comments.length}</span> Comment
+                            <span>{comments?.length || 0}</span> 
+                            {comments?.length>1?'comments':'comment'}
                           </p>
                         </div>
                       </span>
@@ -584,7 +589,7 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
                             />
                           </svg>
                           <p className="_feed_inner_timeline_reaction_para">
-                            <span>12</span> Share
+                            <span>0</span> Share
                           </p>
                         </div>
                       </span>
@@ -607,7 +612,7 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
                             />
                           </svg>
                           <p className="_feed_inner_timeline_reaction_para">
-                            <span>12</span> Save
+                            <span>0</span> Save
                           </p>
                         </div>
                       </span>
@@ -623,7 +628,7 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
               <div className="_feed_inner_timeline_comment_area">
     {!isEditable && (
       <div className="_feed_inner_comment_box">
-        <form className="_feed_inner_comment_box_form">
+        <form className="_feed_inner_comment_box_form" onSubmit={handleComment}>
           <div className="_feed_inner_comment_box_content">
             <div className="_feed_inner_comment_box_content_image">
               <img
@@ -679,13 +684,14 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
               </svg>
             </button>
           </div>
-        </form>
-        <button
-          style={{ color: "blue", marginLeft: "200px",padding:'5px',borderRadius:'50px' }}
-          onClick={() => handleComment()}
+          <button type="submit"
+          style={{ color: "blue",padding:'5px',borderRadius:'50px' }}
+          
         >
           Submit
         </button>
+        </form>
+        
       </div>
     )}
   </div>
@@ -701,7 +707,7 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
     {isEditable && (
       <div className="_feed_inner_timeline_comment_area">
         <div className="_feed_inner_comment_box">
-          <form className="_feed_inner_comment_box_form">
+          <form className="_feed_inner_comment_box_form" onSubmit={handleCommentEdit}>
             <div className="_feed_inner_comment_box_content">
               <div className="_feed_inner_comment_box_content_image">
                 <img
@@ -721,13 +727,14 @@ export const SinglePost = ({postId,status, dlteStatus,editPost}) => {
                 />
               </div>
             </div>
-          </form>
-          <button
-            style={{ color: "blue", marginLeft: "200px",padding:'5px',borderRadius:'50px' }}
-            onClick={() => handleCommentEdit()}
+            <button type="submit"
+            style={{ color: "blue",padding:'5px',borderRadius:'50px' }}
+          
           >
             Update
           </button>
+          </form>
+          
         </div>
       </div>
     )}

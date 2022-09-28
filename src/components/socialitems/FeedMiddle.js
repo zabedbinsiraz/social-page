@@ -644,6 +644,7 @@ const handleStatus = () =>{
       const newStatus = {
         statusId:100 + allStatus?.length,
         status:status,
+        createdAt:new Date()
       }
 
       dispatch(addStatus(newStatus));
@@ -698,24 +699,15 @@ const editPost = (id,status) => {
               </div>
               <div className="_feed_inner_txt_box_textarea">
                 
-                {/* {
-                  isEditPost ? <div><TextArea
-                  
-                  className="_feed_textarea"
-                  rows={2}
-                  placeholder="Write Someting..."
-                  value={editableTxt}
-                  onChange={(e)=>setEditableTxt(e.target.value)}
-                  autoSize={{ minRows: 1, maxRows: 10 }}
-                /> <Button  onClick={()=>editPostHandler()}>update post</Button></div> : <TextArea */}
                <TextArea onClick={showModal}
                 className="_feed_textarea"
                 rows={2}
                 placeholder="Write Someting..."
                 onChange={onChange}
+                value={''}
                 autoSize={{ minRows: 1, maxRows: 10 }}
               />
-                {/* } */}
+             
 
                 <Modal
                   className="_feed_inner_text_area_modal"
@@ -1340,7 +1332,7 @@ const editPost = (id,status) => {
           {/* modal starts for edit  post */}
 
           {/* dynamic post here */}
-          {allStatus && allStatus.slice(0).reverse().map((post)=><SinglePost postId={post.statusId} status={post.status} dlteStatus={dltStatus} editPost={editPost} />)}
+          {allStatus && allStatus.slice(0).reverse().map((post)=><SinglePost postId={post.statusId} status={post.status} dlteStatus={dltStatus} editPost={editPost} createdAt={post.createdAt} />)}
           {/* dynamic post ends here */}
 
           {/* first post */}
@@ -2628,7 +2620,7 @@ const editPost = (id,status) => {
                   </button>
                 </div>
                 {postOneComments &&
-                  postOneComments.map((comment) => (
+                  postOneComments.slice(0).reverse().map((comment) => (
                     <div className="_comment_main">
                       <div className="_comment_image">
                         <a className="_comment_image_link" href="/profile">
@@ -2761,7 +2753,7 @@ const editPost = (id,status) => {
                                       </div>
                                     </div>
                                     <p className="_feed_inner_timeline_reaction_para">
-                                      <span>12</span> Like
+                                      <span>0</span> Like
                                     </p>
                                   </div>
                                 </span>
@@ -3464,7 +3456,7 @@ const editPost = (id,status) => {
                             />
                           </svg>
                           <p className="_feed_inner_timeline_reaction_para">
-                            <span>12</span> Share
+                            <span>0</span> Share
                           </p>
                         </div>
                       </span>
@@ -3487,7 +3479,7 @@ const editPost = (id,status) => {
                             />
                           </svg>
                           <p className="_feed_inner_timeline_reaction_para">
-                            <span>12</span> Save
+                            <span>0</span> Save
                           </p>
                         </div>
                       </span>
@@ -3570,12 +3562,10 @@ const editPost = (id,status) => {
               </div>
               <div className="_timline_comment_main">
                 <div className="_previous_comment">
-                  <button type="button" className="_previous_comment_txt">
-                    View 4 previous comments
-                  </button>
+                  
                 </div>
                 {postTwoComments &&
-                  postTwoComments.map((comment) => (
+                  postTwoComments.slice(0).reverse().map((comment) => (
                     <div className="_comment_main">
                       <div className="_comment_image">
                         <a className="_comment_image_link" href="/profile">
@@ -4193,12 +4183,10 @@ const editPost = (id,status) => {
               </div>
               <div className="_timline_comment_main">
                 <div className="_previous_comment">
-                  <button type="button" className="_previous_comment_txt">
-                    View 4 previous comments
-                  </button>
+                
                 </div>
                 {postThreeComments &&
-                  postThreeComments.map((comment) => (
+                  postThreeComments.slice(0).reverse().map((comment) => (
                     <div className="_comment_main">
                       <div className="_comment_image">
                         <a className="_comment_image_link" href="/profile">
@@ -4951,13 +4939,8 @@ const editPost = (id,status) => {
                   )}
                 </div>
                 <div className="_timline_comment_main">
-                  <div className="_previous_comment">
-                    <button type="button" className="_previous_comment_txt">
-                      View 4 previous comments
-                    </button>
-                  </div>
                   {postFourComments &&
-                    postFourComments.map((comment) => (
+                    postFourComments.slice(0).reverse().map((comment) => (
                       <div className="_comment_main">
                         <div className="_comment_image">
                           <a className="_comment_image_link" href="/profile">
