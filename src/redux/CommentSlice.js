@@ -2,8 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialComments = {
     comments:[
-        {postId:1,commentId:1,comment:'Beautiful'},
-        {postId:2,commentId:2,comment:'Excellent'},
+        
     ]
 };
 

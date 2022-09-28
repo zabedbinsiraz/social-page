@@ -231,6 +231,7 @@ function FeedMiddle() {
       postId: id,
       commentId: allComments.length + 1000,
       comment: newComment,
+      createdAt:new Date(),
     };
     dispatch(addComment(commentNew));
     setPost1cmnt('');
@@ -2615,9 +2616,7 @@ const editPost = (id,status) => {
               </div>
               <div className="_timline_comment_main">
                 <div className="_previous_comment">
-                  <button type="button" className="_previous_comment_txt">
-                    View 4 previous comments
-                  </button>
+                  
                 </div>
                 {postOneComments &&
                   postOneComments.slice(0).reverse().map((comment) => (
@@ -2644,7 +2643,9 @@ const editPost = (id,status) => {
                                     </h4>
                                   </Link>
                                   <p className="_comment_name_info_para">
-                                    5 min ago
+                                    {
+                                      Math.round((new Date()-comment.createdAt)/60000)
+                                    } minutes ago
                                   </p>
                                 </div>
                                 <p className="_comment_name_para">
@@ -3589,7 +3590,9 @@ const editPost = (id,status) => {
                                     </h4>
                                   </Link>
                                   <p className="_comment_name_info_para">
-                                    5 min ago
+                                  {
+                                      Math.round((new Date()-comment.createdAt)/60000)
+                                    } minutes ago
                                   </p>
                                 </div>
                                 <p className="_comment_name_para">
@@ -3698,7 +3701,7 @@ const editPost = (id,status) => {
                                       </div>
                                     </div>
                                     <p className="_feed_inner_timeline_reaction_para">
-                                      <span>12</span> Like
+                                      <span>0</span> Like
                                     </p>
                                   </div>
                                 </span>
@@ -3759,7 +3762,7 @@ const editPost = (id,status) => {
                                       />
                                     </svg>
                                     <p className="_feed_inner_timeline_reaction_para">
-                                      <span>1</span> Reply
+                                      <span>0</span> Reply
                                     </p>
                                   </div>
                                 </span>
@@ -4077,7 +4080,7 @@ const editPost = (id,status) => {
                             />
                           </svg>
                           <p className="_feed_inner_timeline_reaction_para">
-                            <span>12</span> Share
+                            <span>0</span> Share
                           </p>
                         </div>
                       </span>
@@ -4100,7 +4103,7 @@ const editPost = (id,status) => {
                             />
                           </svg>
                           <p className="_feed_inner_timeline_reaction_para">
-                            <span>12</span> Save
+                            <span>0</span> Save
                           </p>
                         </div>
                       </span>
@@ -4210,7 +4213,9 @@ const editPost = (id,status) => {
                                     </h4>
                                   </Link>
                                   <p className="_comment_name_info_para">
-                                    5 min ago
+                                  {
+                                      Math.round((new Date()-comment.createdAt)/60000)
+                                    } minutes ago
                                   </p>
                                 </div>
                                 <p className="_comment_name_para">
@@ -4380,7 +4385,7 @@ const editPost = (id,status) => {
                                       />
                                     </svg>
                                     <p className="_feed_inner_timeline_reaction_para">
-                                      <span>1</span> Reply
+                                      <span>0</span> Reply
                                     </p>
                                   </div>
                                 </span>
@@ -4834,7 +4839,7 @@ const editPost = (id,status) => {
                               />
                             </svg>
                             <p className="_feed_inner_timeline_reaction_para">
-                              <span>12</span> Share
+                              <span>0</span> Share
                             </p>
                           </div>
                         </span>
@@ -4857,7 +4862,7 @@ const editPost = (id,status) => {
                               />
                             </svg>
                             <p className="_feed_inner_timeline_reaction_para">
-                              <span>12</span> Save
+                              <span>0</span> Save
                             </p>
                           </div>
                         </span>
@@ -4964,7 +4969,9 @@ const editPost = (id,status) => {
                                       </h4>
                                     </Link>
                                     <p className="_comment_name_info_para">
-                                      5 min ago
+                                    {
+                                      Math.round((new Date() - comment.createdAt)/60000)
+                                    } minutes ago
                                     </p>
                                   </div>
                                   <p className="_comment_name_para">
@@ -5073,7 +5080,7 @@ const editPost = (id,status) => {
                                         </div>
                                       </div>
                                       <p className="_feed_inner_timeline_reaction_para">
-                                        <span>12</span> Like
+                                        <span>0</span> Like
                                       </p>
                                     </div>
                                   </span>
@@ -5134,7 +5141,7 @@ const editPost = (id,status) => {
                                         />
                                       </svg>
                                       <p className="_feed_inner_timeline_reaction_para">
-                                        <span>1</span> Reply
+                                        <span>0</span> Reply
                                       </p>
                                     </div>
                                   </span>
